@@ -4,7 +4,8 @@ export class Store {
   private state: {[key: string]: any};
 
   constructor(reducers = {}, initialState = {}) {
-    this.state = initialState;
+    this.reducers = reducers;
+    this.state = this.reduce(initialState, {});
   }
 
   get value() {
@@ -13,13 +14,15 @@ export class Store {
 
   // update the state
   dispatch(action) {
+    this.state = this.reduce(this.state, action); // custom function (not the generic one)
+  }
 
-    // create a new state, copy in old and add to it (immutable)
-    this.state = {
-      ...this.state,
-      todos: [...this.state.todos, action.payload]
-    };
+  private reduce(state, action) {
+    const newState = {};
+    for (const prop in this.reducers) {
+      newState[prop] = this.reducers[prop](state[prop], action);
 
-    console.log(this.state, 'new state')
+    }
+    return newState;
   }
 }
