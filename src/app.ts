@@ -13,8 +13,6 @@ const store = new fromStore.Store({}, {
   }]
 });
 
-console.log(store.value);
-
 button.addEventListener(
   'click',
   () => {
@@ -22,7 +20,11 @@ button.addEventListener(
 
     const payload = { label: input.value, complete: false };
 
-    console.log(payload);
+    // dispatch is a function we have written in the reducer not a generic JS function
+    store.dispatch({
+      type: 'ADD_TODO',
+      payload: payload
+    });
 
     input.value = '';
   },
